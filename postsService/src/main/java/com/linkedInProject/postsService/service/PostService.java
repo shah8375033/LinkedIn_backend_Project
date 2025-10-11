@@ -1,5 +1,8 @@
 package com.linkedInProject.postsService.service;
 
+import com.linkedInProject.postsService.auth.AuthContextHolder;
+import com.linkedInProject.postsService.client.ConnectionServiceClient;
+import com.linkedInProject.postsService.dto.PersonDto;
 import com.linkedInProject.postsService.dto.PostCreateResquestDto;
 import com.linkedInProject.postsService.dto.PostDto;
 import com.linkedInProject.postsService.entity.Post;
@@ -16,10 +19,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-
 public class PostService {
     private final ModelMapper modelMapper;
     private final PostRepository postRepository;
+    private final ConnectionServiceClient connectionServiceClient;
 
     public PostDto createPost(PostCreateResquestDto postCreateResquestDto, Long userId) {
         Post post=modelMapper.map(postCreateResquestDto,Post.class);
@@ -29,6 +32,8 @@ public class PostService {
     }
 
     public PostDto getPostById(Long postId) {
+        Long userId= AuthContextHolder.getCurrentUserId();
+        List<PersonDto> list=connectionServiceClient.getFirstDegreeConnections(userId);
         log.info("Get post by id {}", postId);
         Post post=postRepository.findById(postId)
                 .orElseThrow(()-> new ResourceNotFoundException("Resource not found with id " + postId));

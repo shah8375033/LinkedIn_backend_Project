@@ -9,18 +9,22 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-             - Path=/api/v1/users/**
+            - Path=/api/v1/users/**
           filters:
             - StripPrefix=2
+
         - id: posts-service
           uri: lb://POSTS-SERVICE
           predicates:
             - Path=/api/v1/posts/**
           filters:
             - StripPrefix=2
+            - AuthenticationFilter
+
         - id: connection-service
           uri: lb://CONNECTION-SERVICE
           predicates:
             - Path=/api/v1/connections/**
           filters:
             - StripPrefix=2
+            - AuthenticationFilter

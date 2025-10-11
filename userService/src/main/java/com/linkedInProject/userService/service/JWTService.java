@@ -25,7 +25,6 @@ public class JWTService {
             return Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
         }
 
-        ;
 
         public String generateAccessToken(User user) {
             return Jwts.builder()
